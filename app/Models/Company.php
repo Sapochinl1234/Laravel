@@ -9,10 +9,24 @@ class Company extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'industry'];
+    // Nombre de la tabla (opcional si sigue la convención)
+    protected $table = 'companies';
 
+    // Campos que se pueden asignar masivamente
+    protected $fillable = [
+        'name',
+        'industry',
+        'location',
+        'description',
+        'created_at',
+        'updated_at'
+    ];
+
+    /**
+     * Relación uno a muchos con empleos (Job)
+     */
     public function jobs()
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(Job::class, 'company_id');
     }
 }

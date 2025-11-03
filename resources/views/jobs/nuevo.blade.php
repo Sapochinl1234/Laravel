@@ -16,7 +16,7 @@
             @csrf
 
             <input type="text" name="title" placeholder="Título" class="w-full mb-4 border p-2 rounded" value="{{ old('title') }}">
-            <input type="number" name="Salary" placeholder="Salario" class="w-full mb-4 border p-2 rounded" value="{{ old('Salary') }}">
+            <input type="number" name="salary" placeholder="Salario" class="w-full mb-4 border p-2 rounded" value="{{ old('salary') }}">
             <textarea name="details" placeholder="Descripción" class="w-full mb-4 border p-2 rounded">{{ old('details') }}</textarea>
 
             {{-- Etiquetas de empleo --}}

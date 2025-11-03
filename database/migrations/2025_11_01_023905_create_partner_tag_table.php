@@ -9,13 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('job_list', function (Blueprint $table) {
+        Schema::create('partner_tag', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('salary')->nullable();
-            $table->text('details');
+            $table->foreignId('partner_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tag_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_list');
+        Schema::dropIfExists('partner_tag');
     }
 };

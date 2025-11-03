@@ -47,7 +47,7 @@
                         <a href="{{ route('jobs.detalle', $job->id) }}">{{ $job->title }}</a>
                     </h3>
                     <p><strong>Salario:</strong> ${{ number_format($job->Salary) }}</p>
-                    <p><strong>Empresa:</strong> {{ $job->company->name ?? 'Sin empresa asignada' }}</p>
+                    <p><strong>Empresa:</strong>{{ $job->companyRelation ? $job->companyRelation->name : 'Sin empresa asignada' }}</p>
 
                     @if($job->tags->count())
                         <div class="mt-2">

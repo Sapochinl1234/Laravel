@@ -7,12 +7,20 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TagFactory extends Factory
 {
+    /**
+     * El modelo correspondiente a esta fábrica.
+     *
+     * @var string
+     */
     protected $model = Tag::class;
 
-    public function definition(): array
+    /**
+     * Define los valores por defecto del modelo Tag.
+     */
+    public function definition()
     {
         return [
-            'name' => $this->faker->word(), // ← este campo es obligatorio
+            'name' => $this->faker->word,
         ];
     }
 }

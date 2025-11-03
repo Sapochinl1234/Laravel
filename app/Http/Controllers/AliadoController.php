@@ -13,6 +13,7 @@ class AliadoController extends Controller
      */
     public function index()
     {
+        
         $aliados = Aliado::paginate(6);
         return view('aliados.index', compact('aliados'));
     }

@@ -9,10 +9,9 @@ use App\Models\Company;
 
 class JobController extends Controller
 {
-    // Mostrar todos los empleos con filtros
     public function index(Request $request)
     {
-        $query = Job::with('tags', 'company');
+        $query = Job::with('tags', 'companyRelation');
 
         if ($request->filled('company')) {
             $query->where('company_id', $request->company);
@@ -23,7 +22,7 @@ class JobController extends Controller
         }
 
         if ($request->filled('min_salary')) {
-            $query->where('Salary', '>=', $request->min_salary);
+            $query->where('salary', '>=', $request->min_salary);
         }
 
         $jobs = $query->get();
@@ -33,7 +32,6 @@ class JobController extends Controller
         return view('jobs.listado', compact('jobs', 'companies', 'tags'));
     }
 
-    // Mostrar formulario de creación
     public function create()
     {
         $tags = Tag::all();
@@ -41,28 +39,26 @@ class JobController extends Controller
         return view('jobs.nuevo', compact('tags', 'companies'));
     }
 
-    // Guardar nuevo empleo
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'Salary' => 'required|numeric',
+            'salary' => 'required|numeric',
             'details' => 'required|string',
             'company_id' => 'nullable|exists:companies,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id'
         ]);
 
-        $job = Job::create($request->only(['title', 'Salary', 'details', 'company_id']));
+        $job = Job::create($request->only(['title', 'salary', 'details', 'company_id']));
         $job->tags()->sync($request->tags ?? []);
 
         return redirect()->route('jobs.listado')->with('success', 'Empleo creado correctamente.');
     }
 
-    // Mostrar detalle de un empleo
     public function show(Job $job)
     {
-        $job->load('tags', 'company');
+        $job->load('tags', 'companyRelation');
 
         $relacionadosEmpresa = Job::where('company_id', $job->company_id)
                                   ->where('id', '!=', $job->id)
@@ -75,7 +71,6 @@ class JobController extends Controller
         return view('jobs.detalle', compact('job', 'relacionadosEmpresa', 'relacionadosEtiqueta'));
     }
 
-    // Mostrar formulario de edición
     public function edit(Job $job)
     {
         $tags = Tag::all();
@@ -84,32 +79,29 @@ class JobController extends Controller
         return view('jobs.modificar', compact('job', 'tags', 'companies'));
     }
 
-    // Actualizar empleo
     public function update(Request $request, Job $job)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'Salary' => 'required|numeric',
+            'salary' => 'required|numeric',
             'details' => 'required|string',
             'company_id' => 'nullable|exists:companies,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id'
         ]);
 
-        $job->update($request->only(['title', 'Salary', 'details', 'company_id']));
+        $job->update($request->only(['title', 'salary', 'details', 'company_id']));
         $job->tags()->sync($request->tags ?? []);
 
         return redirect()->route('jobs.listado')->with('success', 'Empleo actualizado correctamente.');
     }
 
-    // Eliminar empleo
     public function destroy(Job $job)
     {
         $job->delete();
         return redirect()->route('jobs.listado')->with('success', 'Empleo eliminado.');
     }
 
-    // Mostrar etiquetas asociadas a un empleo (opcional)
     public function showTags($id)
     {
         $job = Job::findOrFail($id);

@@ -1,19 +1,27 @@
 <?php
 
+use App\Http\Controllers\ContactanosController;
 
 use App\Http\Controllers\AliadoController;
+
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\JobController;
+use App\Http\Controllers\PostController;
+use App\Models\Job;
+use App\Http\Controllers\PaginaPrincipalController;
 
 
- 
-Route::get('/', function () {
-    return view('home', [
-        'greeting' => 'Bienvenido a la pagina Principal',
-        'name' => 'Querido estudiante de la U de Caldas',
-    ]);
-});
 
+Route::get('/condiciones', function () {
+    return view('condiciones');
+})->name('condiciones');
+
+#Pagina principal
+Route::get('/', [PaginaPrincipalController::class, 'index'])->name('pagina.principal');
+
+
+#contactanos
 Route::get('/contact', function () {
     return view('contact', [
         'subject' => '¡Gracias por comunicarte con nosotros!',
@@ -25,6 +33,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 
 #JobController
@@ -63,6 +74,14 @@ Route::post('/aliados', [AliadoController::class, 'store'])->name('aliados.store
 Route::get('/aliados/{id}/edit', [AliadoController::class, 'edit'])->name('aliados.edit');
 Route::put('/aliados/{id}', [AliadoController::class, 'update'])->name('aliados.update');
 Route::delete('/aliados/{id}', [AliadoController::class, 'destroy'])->name('aliados.destroy');
+Route::get('/aliados', [AliadoController::class, 'index'])->name('partners.index');
+
+
+#contactanos
+Route::get('/contact', [ContactanosController::class, 'index']);
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+
+
 ?>
 
 

@@ -19,8 +19,9 @@
             <input type="text" name="title" placeholder="Título" class="w-full mb-4 border p-2 rounded"
                    value="{{ old('title', $job->title) }}">
 
-            <input type="number" name="Salary" placeholder="Salario" class="w-full mb-4 border p-2 rounded"
-                   value="{{ old('Salary', $job->Salary) }}">
+            <input type="number" name="salary" placeholder="Salario" class="w-full mb-4 border p-2 rounded"
+       value="{{ old('salary', $job->salary) }}">
+
 
             <textarea name="details" placeholder="Descripción" class="w-full mb-4 border p-2 rounded"
                       rows="5">{{ old('details', $job->details) }}</textarea>

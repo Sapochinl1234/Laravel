@@ -9,21 +9,28 @@ class Job extends Model
 {
     use HasFactory;
 
-    // Nombre personalizado de la tabla
     protected $table = 'job_list';
 
-    // Campos que se pueden asignar masivamente
-    protected $fillable = ['title', 'Salary', 'details'];
+    protected $fillable = [
+        'title',
+        'company',
+        'location',
+        'industry',
+        'details',
+        'salary',
+        'experience',
+        'company_id',
+        'created_at',
+        'updated_at'
+    ];
 
-    // Relación muchos a muchos con etiquetas
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'job_tag', 'job_id', 'tag_id');
     }
 
-    public function company()
+    public function companyRelation()
     {
-    return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class, 'company_id');
     }
-
 }

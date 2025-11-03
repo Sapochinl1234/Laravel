@@ -1,10 +1,158 @@
 <x-layout :heading="$subject">
-    <span class="text-gray-700 font-semibold flex items-center gap-2 mt-4">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-            <path d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z" />
-            <path d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286.921.304 1.83.634 2.726.99v1.27a1.5 1.5 0 0 0-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 0 0 .551-1.607 1.5 1.5 0 0 0 .14-2.67v-.645a48.549 48.549 0 0 1 3.44 1.667 2.25 2.25 0 0 0 2.12 0Z" />
-            <path d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z" />
+    {{-- Encabezado visual llamativo --}}
+    <div class="flex items-center gap-3 mt-6 p-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg shadow-md text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        {{ $message }}
-    </span>
+        <span class="text-lg font-semibold tracking-wide">
+            ¡Conecta con aliados, empleos y publicaciones que impulsan tu futuro!
+        </span>
+    </div>
+
+    {{-- Sección de aliados estratégicos --}}
+    <section class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">🤝 Aliados estratégicos</h2>
+
+        @if($partners->count())
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($partners as $partner)
+                    <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 border border-gray-200">
+                        <h3 class="text-lg font-bold text-indigo-700 mb-2">{{ $partner->name }}</h3>
+
+                        @if(!empty($partner->industry))
+                            <p class="text-sm text-gray-600 mb-1">
+                                <span class="font-semibold text-gray-700">Industria:</span> {{ ucfirst($partner->industry) }}
+                            </p>
+                        @endif
+
+                        <p class="text-sm text-gray-600">
+                            <span class="font-semibold text-gray-700">Registrado el:</span>
+                            {{ \Carbon\Carbon::parse($partner->created_at)->format('d M Y') }}
+                        </p>
+
+                        @if(!empty($partner->description))
+                            <p class="text-gray-600 text-sm leading-relaxed mt-3">{{ $partner->description }}</p>
+                        @endif
+
+                        @if($partner->tags->count())
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                @foreach($partner->tags as $tag)
+                                    <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">{{ $tag->name }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center text-gray-500 mt-4">
+                <p>No hay aliados registrados por el momento.</p>
+            </div>
+        @endif
+    </section>
+
+    {{-- Sección de empleos --}}
+    <section class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">💼 Oportunidades laborales</h2>
+
+        @if($jobs->count())
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($jobs as $job)
+                    <div class="p-6 bg-white rounded-xl border-l-4 border-indigo-500 shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-lg font-bold text-indigo-700 mb-2">{{ $job->title }}</h3>
+
+                        {{-- Empresa: soporta campo plano o relación --}}
+                        <p class="text-sm text-gray-600">
+                            <span class="font-semibold">Empresa:</span>
+                            {{ $job->company ? (is_string($job->company) ? $job->company : $job->company->name) : 'Sin empresa asignada' }}
+                        </p>
+
+                        <p class="text-sm text-gray-600 mb-1">
+                            <span class="font-semibold text-gray-700">Ubicación:</span> {{ $job->location }}
+                        </p>
+
+                        @if(!empty($job->industry))
+                            <p class="text-sm text-gray-600 mb-1">
+                                <span class="font-semibold text-gray-700">Industria:</span> {{ ucfirst($job->industry) }}
+                            </p>
+                        @endif
+
+                        <p class="text-sm text-gray-600">
+                            <span class="font-semibold text-gray-700">Publicado el:</span>
+                            {{ \Carbon\Carbon::parse($job->created_at)->format('d M Y') }}
+                        </p>
+
+                        @if($job->tags->count())
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                @foreach($job->tags as $tag)
+                                    <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">{{ $tag->name }}</span>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center text-gray-500 mt-4">
+                <p>No hay empleos disponibles por el momento.</p>
+            </div>
+        @endif
+    </section>
+
+    {{-- Sección de publicaciones --}}
+    <section class="mt-10">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">📝 Publicaciones destacadas</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($posts as $post)
+                <div class="p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition duration-300 border border-gray-200">
+                    <h3 class="text-lg font-bold text-indigo-700 mb-2">{{ $post->title }}</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed line-clamp-5">{{ $post->content }}</p>
+
+                    @if($post->tags->count())
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            @foreach($post->tags as $tag)
+                                <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full">{{ $tag->name }}</span>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @empty
+                <p class="text-gray-500">No hay publicaciones disponibles.</p>
+            @endforelse
+        </div>
+    </section>
+
+    {{-- Formulario para nueva publicación --}}
+    <section class="mt-16">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">📬 Dejanos tu Comentario</h2>
+
+        <form action="{{ route('posts.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+            @csrf
+
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700">Título</label>
+                <input type="text" name="title" id="title" required
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div>
+                <label for="content" class="block text-sm font-medium text-gray-700">Contenido</label>
+                <textarea name="content" id="content" rows="4" required
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
+            <div>
+                <label for="tags" class="block text-sm font-medium text-gray-700">Etiquetas (separadas por coma)</label>
+                <input type="text" name="tags" id="tags"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="tecnología, innovación, desarrollo">
+            </div>
+
+            <button type="submit"
+                class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-md hover:bg-indigo-700 transition">
+                Publicar
+            </button>
+        </form>
+    </section>
 </x-layout>
